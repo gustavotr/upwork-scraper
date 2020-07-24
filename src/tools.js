@@ -74,7 +74,14 @@ exports.getSearchUrl = ({ search, category, hourlyRate, englishLevel }) => {
     return url.href;
 };
 
-exports.gotoFunction = async ({ page, request }) => {
+exports.gotoFunction = async ({ page, request, session }) => {
     await Apify.utils.puppeteer.blockRequests(page);
-    return page.goto(request.url, { timeout: 60000 });
+    try {
+        const response = await page.goto(request.url, { timeout: 60000 });
+        return response;
+    } catch (error) {
+        session.retire();
+        const response = await page.goto(request.url, { timeout: 60000 });
+        return response;
+    }
 };

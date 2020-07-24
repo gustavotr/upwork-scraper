@@ -76,6 +76,10 @@ Apify.main(async () => {
                     log.warning(`Url does not match any parser: ${request.url}`);
             }
         },
+
+        handleFailedRequestFunction: async ({ request }) => {
+            log.error(`Request failed too many times: ${request.url}`);
+        },
     });
 
     log.info('Starting the crawl.');
