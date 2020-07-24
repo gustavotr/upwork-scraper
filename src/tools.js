@@ -8,7 +8,7 @@ exports.log = log;
 
 exports.splitUrl = (url) => url.split('?')[0];
 
-exports.goToNextPage = async ({ requestQueue, page, request }) => {
+exports.goToNextPage = async ({ requestQueue, page }) => {
     const doesNotHaveNextPage = await page.$eval('.pagination-next', (pagination) => {
         return Array.from(pagination.classList).includes('disabled');
     });
@@ -17,7 +17,7 @@ exports.goToNextPage = async ({ requestQueue, page, request }) => {
         return;
     }
 
-    const searchParams = new URLSearchParams(request.url);
+    const searchParams = new URLSearchParams(page.url());
     const pageNumber = Number(searchParams.get('page')) || 1;
 
     searchParams.set('page', pageNumber + 1);
@@ -75,7 +75,7 @@ exports.getSearchUrl = ({ search, category, hourlyRate, englishLevel }) => {
 };
 
 exports.gotoFunction = async ({ page, request, session }) => {
-    await Apify.utils.puppeteer.blockRequests(page);
+    // await Apify.utils.puppeteer.blockRequests(page);
     try {
         const response = await page.goto(request.url, { timeout: 60000 });
         return response;

@@ -4,9 +4,9 @@ exports.profileSearchParser = async ({ requestQueue, page }) => {
     log.debug('Profile search url...');
 
     try {
-        await page.waitForSelector('facet-input-domestic-marketplace', { timeOut: 500 });
+        await page.waitForSelector('up-c-toggler button.on', { timeOut: 500 });
         await page.click('facet-input-domestic-marketplace');
-        log.debug('Searching worldwide');
+        log.debug('Turn off US-only');
     } catch (err) {
         log.debug('Normal search');
     }
