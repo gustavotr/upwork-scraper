@@ -4,7 +4,7 @@ exports.profileSearchParser = async ({ requestQueue, page }) => {
     log.debug('Profile search url...');
 
     try {
-        await page.waitForSelector('facet-input-domestic-marketplace', { timeOut: 5000 });
+        await page.waitForSelector('facet-input-domestic-marketplace', { timeOut: 500 });
         await page.click('facet-input-domestic-marketplace');
         log.debug('Searching worldwide');
     } catch (err) {

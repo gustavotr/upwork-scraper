@@ -38,6 +38,7 @@ Apify.main(async () => {
         proxyConfiguration,
         launchPuppeteerOptions: {
             stealth: true,
+            devtools: !Apify.isAtHome(),
         },
 
         gotoFunction,

@@ -75,28 +75,6 @@ exports.getSearchUrl = ({ search, category, hourlyRate, englishLevel }) => {
 };
 
 exports.gotoFunction = async ({ page, request }) => {
-    await page.setRequestInterception(true);
-
-    page.on('request', (req) => {
-        const url = req.url();
-        const resourceType = req.resourceType();
-        const ignoredTypes = [
-            'image',
-            'font',
-        ];
-
-        const ignored = [
-        ];
-
-        let abort = ignoredTypes.includes(resourceType);
-        if (!abort) abort = ignored.some((item) => url.includes(item));
-
-        if (abort) {
-            req.abort();
-        } else {
-            req.continue();
-        }
-    });
-    await Apify.utils.sleep(Math.random() * 1000 * 5);
+    await Apify.utils.puppeteer.blockRequests(page);
     return page.goto(request.url, { timeout: 60000 });
 };
