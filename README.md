@@ -64,7 +64,7 @@ Output is stored in a dataset.
 
 ### Compute units consumption
 
-Estimated ~0.06 CU per 100 requests
+Estimated ~0.95 CU per 100 requests
 
 ### Extend output function
 
