@@ -2,14 +2,18 @@ const Apify = require('apify');
 const { EnumURLTypes, EnumBaseUrl } = require('./constants');
 
 const { log } = Apify.utils;
-log.setLevel(log.LEVELS.DEBUG);
 
 exports.log = log;
+
+exports.enableDebugMode = () => {
+    log.setLevel(log.LEVELS.DEBUG);
+};
 
 exports.splitUrl = (url) => url.split('?')[0];
 
 exports.goToNextPage = async ({ requestQueue, page }) => {
-    const doesNotHaveNextPage = await page.$eval('.pagination-next', (pagination) => {
+    log.debug('Looking for pagination');
+    const doesNotHaveNextPage = await page.$eval('.up-pagination-item', (pagination) => {
         return Array.from(pagination.classList).includes('disabled');
     });
 
@@ -45,7 +49,7 @@ exports.getUrlType = (url = '') => {
         type = EnumURLTypes.JOB_SEARCH;
     }
 
-    if (url.match(/upwork\.com\/(o\/profiles\/users.+|fl\/.+)/)) {
+    if (url.match(/upwork\.com\/(o\/profiles\/users|fl|freelancers)\/.+/)) {
         type = EnumURLTypes.PROFILE;
     }
 
@@ -74,14 +78,18 @@ exports.getSearchUrl = ({ search, category, hourlyRate, englishLevel }) => {
     return url.href;
 };
 
-exports.gotoFunction = async ({ page, request, session }) => {
-    // await Apify.utils.puppeteer.blockRequests(page);
-    try {
-        const response = await page.goto(request.url, { timeout: 60000 });
-        return response;
-    } catch (error) {
-        session.retire();
-        const response = await page.goto(request.url, { timeout: 60000 });
-        return response;
-    }
+exports.blockUnusedRequests = async (page) => {
+    await Apify.utils.puppeteer.blockRequests(page, {
+        urlPatterns: [
+            '.jpg',
+            '.jpeg',
+            '.png',
+            '.svg',
+            '.gif',
+            '.woff',
+            '.pdf',
+            '.zip',
+            'doubleclicks',
+        ],
+    });
 };

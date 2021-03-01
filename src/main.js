@@ -1,12 +1,16 @@
 const Apify = require('apify');
-const { log, getUrlType, goToNextPage, getSearchUrl, gotoFunction } = require('./tools');
+const { log, getUrlType, goToNextPage, getSearchUrl, blockUnusedRequests, enableDebugMode } = require('./tools');
 const { EnumURLTypes } = require('./constants');
 const { profileParser, categoryParser, profileSearchParser } = require('./parsers');
 
 Apify.main(async () => {
     const input = await Apify.getInput();
 
-    const { proxy, startUrls, maxItems, search, extendOutputFunction, category, hourlyRate, englishLevel, useBuiltInSearch } = input;
+    const { proxy, startUrls, maxItems, search, extendOutputFunction, category, hourlyRate, englishLevel, useBuiltInSearch, debugMode } = input;
+
+    if (debugMode) {
+        enableDebugMode();
+    }
 
     if (!startUrls && !useBuiltInSearch) {
         throw new Error('startUrls or built-in search must be used!');
@@ -22,13 +26,13 @@ Apify.main(async () => {
     const dataset = await Apify.openDataset();
     let { itemCount } = await dataset.getInfo();
 
-    let proxyConfiguration = null;
+    const proxyConfiguration = await Apify.createProxyConfiguration(proxy);
 
-    if (proxy.useApifyProxy) {
-        proxyConfiguration = await Apify.createProxyConfiguration({
-            groups: proxy.apifyProxyGroups,
-        });
-    }
+    const preNavigationHooks = [
+        async (crawlingContext) => {
+            await blockUnusedRequests(crawlingContext.page);
+        },
+    ];
 
     const crawler = new Apify.PuppeteerCrawler({
         requestList,
@@ -36,12 +40,34 @@ Apify.main(async () => {
         useSessionPool: true,
         persistCookiesPerSession: true,
         proxyConfiguration,
-        launchPuppeteerOptions: {
-            stealth: true,
-            devtools: !Apify.isAtHome(),
+        launchContext: {
+            useChrome: true,
+            launchOptions: {
+                headless: false,
+                stealth: false,
+                devtools: !Apify.isAtHome(),
+                stealthOptions: {
+                    addPlugins: false,
+                    emulateWindowFrame: false,
+                    emulateWebGL: false,
+                    emulateConsoleDebug: false,
+                    addLanguage: false,
+                    hideWebDriver: true,
+                    hackPermissions: false,
+                    mockChrome: false,
+                    mockChromeInIframe: false,
+                    mockDeviceMemory: false,
+                },
+                args: [
+                    '--disable-dev-shm-usage',
+                    '--disable-setuid-sandbox',
+                    '--disable-notifications',
+                ],
+                useChrome: Apify.isAtHome(),
+            },
         },
 
-        gotoFunction,
+        preNavigationHooks,
 
         handlePageFunction: async (context) => {
             if (itemCount >= maxItems) {
@@ -57,7 +83,7 @@ Apify.main(async () => {
 
             if (title.includes('denied')) {
                 session.retire();
-                throw new Error(`Human verifition required on ${request.url}`);
+                throw new Error(`Human verification required on ${request.url}`);
             }
 
             const type = getUrlType(request.url);
