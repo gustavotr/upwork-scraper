@@ -108,6 +108,10 @@ Apify.main(async () => {
         },
     });
 
+    Apify.events.on('error', () => {
+        crawler.autoscaledPool.abort();
+    });
+
     log.info('Starting the crawl.');
     await crawler.run();
     log.info('Crawl finished.');

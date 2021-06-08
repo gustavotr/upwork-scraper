@@ -1,3 +1,4 @@
+const Apify = require('apify');
 const { log, splitUrl } = require('../tools');
 
 exports.profileSearchParser = async ({ requestQueue, page }) => {
@@ -36,6 +37,7 @@ exports.profileSearchParser = async ({ requestQueue, page }) => {
         }
     } catch (err) {
         log.debug(err);
+        Apify.events.emit('error');
         log.error('No profiles were found');
     }
 };
