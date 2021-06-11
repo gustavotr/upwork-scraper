@@ -5,11 +5,12 @@ exports.profileSearchParser = async ({ requestQueue, page }) => {
     log.debug('Profile search url...');
 
     try {
-        await page.waitForSelector('up-c-toggler button.on', { timeout: 500 });
-        await page.click('facet-input-domestic-marketplace');
-        log.debug('Turn off US-only');
+        const usOnlySwitchSelector = '#cfe-domestic-switch-desktop.up-switch-on';
+        await page.waitForSelector(usOnlySwitchSelector, { timeout: 500 });
+        await page.click(usOnlySwitchSelector);
+        log.debug('Turned off US-only');
     } catch (err) {
-        log.debug('Normal search');
+        log.debug('No US-only switch found');
     }
 
     try {
