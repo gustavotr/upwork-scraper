@@ -1,134 +1,125 @@
 {
-    "title": "Input schema for Upwork scraper",
-    "description": "Scrape information about freelancers and agencies from upwork.com without login.",
-    "type": "object",
-    "schemaVersion": 1,
-    "properties": {
-      "startUrls": {
-        "title": "Start URLs",
-        "type": "array",
-        "description": "URLs to start with.",
-        "editor": "stringList",
-        "patternValue": "^$|https:\\/\\/www\\.upwork\\.com\\/(search|hire|o/profiles/users)\\/\\.*",
-        "prefill": ["https://www.upwork.com/search/profiles/"],
-        "default": ["https://www.upwork.com/search/profiles/"]
-      },
-      "useBuiltInSearch":{
-        "title": "Use built-in search and ignore startUrls",
-        "type": "boolean",
-        "description": "Use the fields bellow to perform a search and scrape the result",
-        "editor": "checkbox",
-        "sectionCaption": "Search",
-        "sectionDescription": "This fields will be used on the search"
-      },
-      "search": {
-        "title": "Search",
-        "type": "string",
-        "description": "Words to be searched",
-        "editor": "textfield"
-      },
-      "category":{
-        "title": "Category",
-        "type": "string",
-        "description": "Select a category to filter",
-        "editor": "select",
-        "enum": [
-          "",
-          "531770282584862721",
-          "531770282580668416",
-          "531770282580668417",
-          "531770282580668420",
-          "531770282580668421",
-          "531770282584862722",
-          "531770282580668419",
-          "531770282584862723",
-          "531770282580668422", 
-          "531770282584862720",
-          "531770282580668418",
-          "531770282580668423"
-        ],
-        "enumTitles": [
-          "All Categories",
-          "Accounting & Consulting",
-          "Admin Support",
-          "Customer Service",
-          "Data Science & Analytics",
-          "Design & Creative",
-          "Engineering & Architecture",
-          "IT & Networking",
-          "Legal",
-          "Sales & Marketing",
-          "Translation",
-          "Web, Mobile & Software Dev",
-          "Writing"
-        ]
-      },
-      "englishLevel":{
-        "title": "English Level",
-        "type": "string",
-        "description": "Select the english level required",
-        "editor": "select",
-        "enum": [ "0", "1", "2", "3", "4" ],
-        "enumTitles": [
-          "Any level",
-          "Basic",
-          "Conversational",
-          "Fluent",
-          "Native or bilingual"
-        ]
-      },
-      "hourlyRate":{
-        "title": "Hourly Rate",
-        "type": "string",
-        "description": "Select an hourly rate rate",
-        "editor": "select",
-        "enum": [
-          "",
-          "0-10",
-          "10-30",
-          "30-60",
-          "60"
-        ],
-        "enumTitles": [
-          "Any hourly rate",
-          "$10/hr and bellow",
-          "$10/hr - $30/hr",
-          "$30/hr - $60/hr",
-          "$60/hr and above"
-        ]
-      },
-      "maxItems": {
-        "title": "Search results limit",
-        "type": "integer",
-        "description": "How many search results should be processed",
-        "editor": "number",
-        "prefill": 100,
-        "default": 100,
-        "sectionCaption": "Configuration",
-        "sectionDescription": "This fields will help you configure the scraped data"
-      },
-      "extendOutputFunction": {
-        "title": "Extended Output Function",
-        "type": "string",
-        "description": "Here you can write your custom javascript code to extract custom data from the page.",
-        "editor": "javascript",
-        "prefill": "async () => {\n  return { timestamp: Date.now() }\n\n}"
-      },
-      "proxy": {
-        "title": "Proxy configuration",
-        "type": "object",
-        "description": "Select proxies to be used by your crawler.",
-        "prefill": {
-          "useApifyProxy": true,
-          "apifyProxyGroups": [
-            "SHADER"
-          ]
-        },
-        "default": {
-          "useApifyProxy": true
-        },
-        "editor": "proxy"
-      }
+  "title": "Input schema for Upwork scraper",
+  "description": "Scrape information about freelancers and agencies from upwork.com without login.",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "startUrls": {
+      "title": "Start URLs",
+      "type": "array",
+      "description": "URLs to start with.",
+      "editor": "stringList",
+      "patternValue": "^$|https:\\/\\/www\\.upwork\\.com\\/(search|hire|o/profiles/users)\\/\\.*",
+      "prefill": ["https://www.upwork.com/search/profiles/"],
+      "default": ["https://www.upwork.com/search/profiles/"]
     },
-    "required": []
-  }
+    "useBuiltInSearch": {
+      "title": "Use built-in search and ignore startUrls",
+      "type": "boolean",
+      "description": "Use the fields bellow to perform a search and scrape the result",
+      "editor": "checkbox",
+      "sectionCaption": "Search",
+      "sectionDescription": "This fields will be used on the search"
+    },
+    "search": {
+      "title": "Search",
+      "type": "string",
+      "description": "Words to be searched",
+      "editor": "textfield"
+    },
+    "category": {
+      "title": "Category",
+      "type": "string",
+      "description": "Select a category to filter",
+      "editor": "select",
+      "enum": [
+        "",
+        "531770282584862721",
+        "531770282580668416",
+        "531770282580668417",
+        "531770282580668420",
+        "531770282580668421",
+        "531770282584862722",
+        "531770282580668419",
+        "531770282584862723",
+        "531770282580668422",
+        "531770282584862720",
+        "531770282580668418",
+        "531770282580668423"
+      ],
+      "enumTitles": [
+        "All Categories",
+        "Accounting & Consulting",
+        "Admin Support",
+        "Customer Service",
+        "Data Science & Analytics",
+        "Design & Creative",
+        "Engineering & Architecture",
+        "IT & Networking",
+        "Legal",
+        "Sales & Marketing",
+        "Translation",
+        "Web, Mobile & Software Dev",
+        "Writing"
+      ]
+    },
+    "englishLevel": {
+      "title": "English Level",
+      "type": "string",
+      "description": "Select the english level required",
+      "editor": "select",
+      "enum": ["0", "1", "2", "3", "4"],
+      "enumTitles": [
+        "Any level",
+        "Basic",
+        "Conversational",
+        "Fluent",
+        "Native or bilingual"
+      ]
+    },
+    "hourlyRate": {
+      "title": "Hourly Rate",
+      "type": "string",
+      "description": "Select an hourly rate rate",
+      "editor": "select",
+      "enum": ["", "0-10", "10-30", "30-60", "60"],
+      "enumTitles": [
+        "Any hourly rate",
+        "$10/hr and bellow",
+        "$10/hr - $30/hr",
+        "$30/hr - $60/hr",
+        "$60/hr and above"
+      ]
+    },
+    "maxItems": {
+      "title": "Search results limit",
+      "type": "integer",
+      "description": "How many search results should be processed",
+      "editor": "number",
+      "prefill": 100,
+      "default": 100,
+      "sectionCaption": "Configuration",
+      "sectionDescription": "This fields will help you configure the scraped data"
+    },
+    "extendOutputFunction": {
+      "title": "Extended Output Function",
+      "type": "string",
+      "description": "Here you can write your custom javascript code to extract custom data from the page.",
+      "editor": "javascript",
+      "prefill": "async () => {\n  return { timestamp: Date.now() }\n\n}"
+    },
+    "proxy": {
+      "title": "Proxy configuration",
+      "type": "object",
+      "description": "Select proxies to be used by your crawler.",
+      "prefill": {
+        "useApifyProxy": true
+      },
+      "default": {
+        "useApifyProxy": true
+      },
+      "editor": "proxy"
+    }
+  },
+  "required": []
+}
