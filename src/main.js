@@ -2,6 +2,7 @@ const Apify = require('apify');
 const { log, getUrlType, goToNextPage, getSearchUrl, blockUnusedRequests, enableDebugMode } = require('./tools');
 const { EnumURLTypes } = require('./constants');
 const { profileParser, categoryParser, profileSearchParser } = require('./parsers');
+const { createProxyWithValidation } = require('./proxy-validations');
 
 Apify.main(async () => {
     const input = await Apify.getInput();
@@ -26,7 +27,7 @@ Apify.main(async () => {
     const dataset = await Apify.openDataset();
     let { itemCount } = await dataset.getInfo();
 
-    const proxyConfiguration = await Apify.createProxyConfiguration(proxy);
+    const proxyConfiguration = await createProxyWithValidation(proxy);
 
     const preNavigationHooks = [
         async (crawlingContext) => {
